@@ -88,6 +88,8 @@ Week 1 is about **contracts and mocks**: everyone can build UI against mock data
 - Changes are audited.
 - CI green: lint, typecheck, unit tests, build, database tests.
 - Feature doc updated in `docs/features/` (RUR format – see the `nwp-feature-docs` skill).
+- `/feature-review` run and findings fixed or recorded in the PR; `/imprint` run if UI changed.
+- Handoff written in `.agent/handoffs/` if another member depends on the work; `.agent/current-state.md` updated if the team needs to know.
 - PR template checklist ticked.
 
 ## Agent skills

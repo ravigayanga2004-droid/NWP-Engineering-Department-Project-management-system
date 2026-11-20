@@ -36,7 +36,9 @@ Fix failures; do not skip or weaken tests to make them pass.
 
 ## 4. Self-review
 
-- Run the `nwp-security-checklist` skill on the diff.
+- Run `/feature-review` (three-layer review) and the `nwp-security-checklist` skill on the diff; run `/imprint` if UI changed.
+- Write a handoff in `.agent/handoffs/` if another member depends on this work; add a line to `.agent/current-state.md` if the team needs to know (e.g. a migration merged).
+- Run `/remember save` so the next session can continue.
 - New user-facing text is in `messages/en/<feature>.json` (with si/ta copies).
 - Feature doc in `docs/features/` updated (`nwp-feature-docs` skill) when behaviour changed.
 - No real department data, secrets or `.env` files in the diff.

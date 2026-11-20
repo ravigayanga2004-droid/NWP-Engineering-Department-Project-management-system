@@ -64,6 +64,14 @@
 /messages/*/estimates.json                  @member3-github
 /messages/*/works-list.json                 @member4-github
 
-# Agent skills and instructions: whole team
+# Agent skills, instructions and shared state: whole team
 /.claude/                                   @member1-github @member2-github @member3-github @member4-github
 /AGENTS.md                                  @member1-github @member2-github @member3-github @member4-github
+/.agent/                                    @member1-github @member2-github @member3-github @member4-github
+/docs/ui-registry.md                        @member1-github @member2-github @member3-github @member4-github
+
+# Personal session memory: only its owner
+/.agent/memory/member-1.md                  @member1-github
+/.agent/memory/member-2.md                  @member2-github
+/.agent/memory/member-3.md                  @member3-github
+/.agent/memory/member-4.md                  @member4-github
