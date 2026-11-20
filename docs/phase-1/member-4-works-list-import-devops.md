@@ -4,6 +4,12 @@
 
 You build the page everyone uses most – the **works list** – plus the Excel export and the import of today's register and workbook. You also run the project: branches, environments, CI, E2E tests, and contact with the department.
 
+## Your Figma screens
+
+- [04 Works list](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=9-242)
+- Components: [Grid Cell](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=5-49) · [Status Badge](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=3-90) · [all components](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=2-2)
+- Styling rules: [docs/ui-registry.md](../ui-registry.md)
+
 ## Your folders
 
 `src/app/(app)/works/page.tsx` · `src/features/works-list/**` · `messages/*/works-list.json` · `scripts/**` · `e2e/**` · `.github/**` · `package.json`, `package-lock.json`, `next.config.ts`, `vercel.json`, `vitest.config.ts`, `playwright.config.ts`, `supabase/config.toml`

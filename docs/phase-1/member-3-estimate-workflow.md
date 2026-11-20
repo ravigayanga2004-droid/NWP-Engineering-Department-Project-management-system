@@ -4,6 +4,12 @@
 
 You build what happens after registration: design tasks, forwarding to the DE office, the DE estimate under the Estimate No, the **Rs 5M routing** with the HO check, sending to the requester, and the work page that shows it all. This replaces the second half of the paper Estimate Register.
 
+## Your Figma screens
+
+- [05 Work page](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=10-426) · [06 DE inbox](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=12-506) · [07 HO check queue](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=12-725)
+- Components: [Status Badge](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=3-90) · [all components](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=2-2)
+- Styling rules: [docs/ui-registry.md](../ui-registry.md)
+
 ## Your folders
 
 `src/app/(app)/works/[id]/**` · `src/app/(app)/inbox/**` · `src/features/estimates/**` · `messages/*/estimates.json` · `supabase/migrations/*_estimate_*.sql` · `supabase/tests/estimate_*.sql`

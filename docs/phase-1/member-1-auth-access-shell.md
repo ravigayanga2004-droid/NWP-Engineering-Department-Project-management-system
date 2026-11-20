@@ -4,6 +4,12 @@
 
 You build the foundation everyone else stands on: sign-in with MFA, roles and data scope, the audit log, and the app shell. **Your week-1 migration is the critical path** – merge it by day 4.
 
+## Your Figma screens
+
+- [01 Login](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=6-2) · [02 MFA verify](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=6-24)
+- Shell components (used on every app screen): [Top Bar](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=5-50) · [Sidebar](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=5-68) · [all components](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=2-2)
+- Styling rules: [docs/ui-registry.md](../ui-registry.md)
+
 ## Your folders
 
 `src/app/(auth)/**` · `src/app/(app)/layout.tsx` · `src/app/(app)/admin/users/**` · `src/features/auth/**` · `src/features/admin-users/**` · `src/lib/auth/**` · `src/lib/supabase/**` · `src/components/shell/**` · `src/i18n/**` · `messages/*/{common,auth,shell,admin-users}.json` · `supabase/migrations/*_auth_*.sql` · `supabase/tests/auth_*.sql`

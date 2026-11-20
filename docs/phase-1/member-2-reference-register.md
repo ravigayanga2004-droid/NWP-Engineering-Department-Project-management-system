@@ -4,6 +4,12 @@
 
 You build how a request enters the system: the reference lists, the request letter, its works and their **Estimate No** – replacing the first half of the paper Estimate Register. Your `register` migration (week 3, day 2) unblocks Member 3 and 4.
 
+## Your Figma screens
+
+- [03 Register letters – Excel-style grid](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=7-17)
+- Components: [Grid Cell](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=5-49) · [Input](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=5-17) · [all components](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=2-2)
+- Styling rules: [docs/ui-registry.md](../ui-registry.md)
+
 ## Your folders
 
 `src/app/(app)/admin/reference/**` · `src/app/(app)/letters/**` · `src/features/reference/**` · `src/features/register/**` · `src/lib/estimate-no/**` · `messages/*/{reference,register}.json` · `supabase/migrations/*_ref_*.sql`, `*_register_*.sql` · `supabase/tests/{ref,register}_*.sql` · reference rows in `supabase/seed.sql` (below Member 1's section)

@@ -4,6 +4,19 @@ The classes every screen uses, so the four members' pages look the same and matc
 
 Design source: [NWP School Works – Phase 1 UI (Figma)](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY) – Components page (tokens, Button, Input, Status Badge, Nav Item, Grid Cell, Top Bar, Sidebar) and Screens page (01–07).
 
+## Screens and owners
+
+| Figma screen | Route | Owner |
+| --- | --- | --- |
+| [01 Login](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=6-2) | `/login` | Member 1 |
+| [02 MFA verify](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=6-24) | `/mfa/verify` | Member 1 |
+| [03 Register letters – Excel-style grid](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=7-17) | `/letters/new` | Member 2 |
+| [04 Works list](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=9-242) | `/works` | Member 4 |
+| [05 Work page](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=10-426) | `/works/[id]` | Member 3 |
+| [06 DE inbox](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=12-506) | `/inbox/de` | Member 3 |
+| [07 HO check queue](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=12-725) | `/inbox/ho-check` | Member 3 |
+| [Components page](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY?node-id=2-2) (Top Bar, Sidebar, Button, Input, Status Badge, Grid Cell, icons) | shared | Member 1 reviews `src/components/ui` and shell |
+
 ## Baseline – established 2026-11-20 from the Figma tokens
 
 Font: **Geist** (sans) for everything, **Geist Mono** for Estimate No where shown alone. Theme: shadcn/ui neutral (`src/app/globals.css`).
