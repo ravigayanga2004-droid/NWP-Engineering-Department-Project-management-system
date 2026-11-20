@@ -13,7 +13,7 @@ You build the foundation everyone else stands on: sign-in with MFA, roles and da
 ### Week 1 – `auth` migration (critical path)
 
 - [ ] Enum `app_role` (8 roles in [contracts](contracts.md)).
-- [ ] `divisions` (7 rows seeded), `funds` (codes seeded), `settings` (`ho_check_threshold = 5000000`).
+- [ ] `divisions` (7 rows seeded), `funds` (codes seeded), `settings` (`ho_check_threshold = 5000000`, `estimation_fee_rate_don = 0.01`, `retention_days_repair = 180`, `retention_days_new = 365` – values taken from the old workbook formulas).
 - [ ] `profiles` (`user_id` → `auth.users`, `full_name`, `role`, `office`, `division_id`, `active`) and `profile_funds`.
 - [ ] Helper functions: `mfa_ok()`, `current_app_role()`, `current_division()`, `has_fund()`, `is_role()`, `setting_numeric()` – `security definer`, `stable`, `set search_path = ''`.
 - [ ] `audit` schema: `audit.log` table + `audit.log_change()` trigger function; no update/delete grants on `audit.log`.

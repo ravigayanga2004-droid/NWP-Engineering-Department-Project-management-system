@@ -20,4 +20,6 @@ Full specification (workflow, data model, rules, security): [NWP School Works Sy
 - [Start the Next.js + Supabase project](setup/01-nextjs-supabase-setup.md)
 - [Feature docs](features/README.md) – one per feature, written as each slice is finished
 - [Decisions log](decisions.md) – answers from the department and team decisions
+- [Workbook formula analysis](analysis/workbook-formulas.md) – business rules and bugs found in the old Excel formulas
+- UI designs (Figma): [NWP School Works – Phase 1 UI](https://www.figma.com/design/scdj35S8ZQipZ9aM12foIY)
 - Agent instructions: [AGENTS.md](../AGENTS.md) and skills in [.claude/skills](../.claude/skills)

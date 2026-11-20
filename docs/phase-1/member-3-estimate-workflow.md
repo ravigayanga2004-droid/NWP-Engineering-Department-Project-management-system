@@ -25,12 +25,12 @@ Threshold = `setting_numeric('ho_check_threshold')` (Rs 5,000,000), never a lite
 
 - [ ] Agree function signatures in [contracts](contracts.md) with Members 2 and 4 (day 1–2).
 - [ ] `src/features/estimates/mock.ts`; build `/inbox/de`, `/inbox/ho-check` and `/works/[id]` layouts against it.
-- [ ] `<StatusBadge>` and `statusLabel()` (exported – Member 4 uses them in the list).
+- [ ] `<StatusBadge>`, `statusLabel()`, `statusRank()` and `FUNNEL_STAGES` (exported – Member 4 uses them in the list, Phase 3 dashboards use the funnel).
 - [ ] Draft the `estimate` migration (merge after Member 2's `register` migration).
 
 ### Week 3 – `estimate` migration
 
-- [ ] `design_tasks`, `estimates` (versions, `is_current`), `work_status_history`, the `works_overview` view (`security_invoker = true`).
+- [ ] `design_tasks`, `estimates` (versions, `is_current`), `work_status_history`, `status_rank(work_status)` (order and funnel from the old count formulas – see [contracts](contracts.md#status-order-and-stage-funnel)), the `works_overview` view (`security_invoker = true`) with `status_rank` and `cost_for_estimation` (DON works: estimate × `estimation_fee_rate_don`).
 - [ ] RLS: DE staff read/write estimates of their division (through functions); HO TO reads works waiting for check; designers read their tasks; head engineer reads all.
 
 ### Weeks 4–5 – workflow functions + inboxes

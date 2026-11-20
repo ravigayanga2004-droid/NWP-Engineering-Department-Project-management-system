@@ -72,7 +72,9 @@ Week 1 is about **contracts and mocks**: everyone can build UI against mock data
 
 | Rule | Detail |
 | --- | --- |
-| Estimate No | Entered by the subject clerk **before** the work is sent to the division. Format `NWPEng/E/<year>/<serial>/<institute>/<fund>/<Div> <div serial>`, e.g. `NWPEng/E/2026/266/MOE/OTHER/Kul 033`. Unique. |
+| Estimate No | Entered by the subject clerk **before** the work is sent to the division; the system suggests it with the department's original rule. Format `NWPEng/<section>/<year>/<serial>/<institute>/<FUND>/<Div> <div serial>`, e.g. `NWPEng/E/2026/266/MOE/OTHER/Kul 033`. Unique. |
+| Sections | `E` Education · `H` Health · `O` Other Department – the register covers more than schools; Phase 1 screens show Education |
+| Status order | `REG → EUP → EP → TC → AW → WIP → WC → FBTP → RTR → RR → RRD` (`TS`, `TER` after award, `CAN` outside). Counts use `status_rank`, never fixed rows/cells |
 | Tender No | Not in Phase 1. Entered later by the subject clerk when the work is given to a company. Never stored in the Estimate No field. |
 | Every work goes to its DE office | The letter budget never decides the route. |
 | Rs 5M rule | DE estimate **< Rs 5M** → DE office completes it. **≥ Rs 5M** → HO TO must check it before it is sent. Limit is in `settings`, not hard-coded. |

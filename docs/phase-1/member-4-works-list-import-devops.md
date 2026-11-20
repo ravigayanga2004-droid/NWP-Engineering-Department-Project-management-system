@@ -31,7 +31,8 @@ You build the page everyone uses most – the **works list** – plus the Excel 
 
 ### Weeks 5–6 – import + E2E
 
-- [ ] `scripts/import/run.ts --dry-run`: writes nothing, prints a cleanup report (`cleanup-report-<date>.xlsx`): duplicate works across sheets (9), one Estimate No on two works (2026/362), division mismatches (8), spelling variants, text dates, blank statuses.
+- [ ] `scripts/import/run.ts --dry-run`: writes nothing, prints a cleanup report (`cleanup-report-<date>.xlsx`): duplicate works across sheets (9), one Estimate No on two works (2026/362), division mismatches (8), spelling variants, text dates, blank statuses. Map statuses `PC → TC`, `Terminated`/`Terminate → TER`, every Cancelled spelling → `CAN`; read **values only** (never trust the workbook's count or subtotal formulas).
+- [ ] **Totals reconciliation sheet** in the report: our totals per division and fund vs the workbook's printed Sum/Grand Sum figures, explaining each difference. Expect differences – the workbook's subtotals skip 195 works (Rs 902.6M of estimates) and some summary rows point at the wrong division ([workbook formula analysis](../analysis/workbook-formulas.md)). The department must see this before go-live so the new totals are trusted.
 - [ ] Real run (upsert by Estimate No) using the secret key from a local `.env` – never from the app.
 - [ ] E2E for the full flow: register → forward → DE estimate < 5M → send; ≥ 5M → HO check → send; DE of another division sees nothing.
 

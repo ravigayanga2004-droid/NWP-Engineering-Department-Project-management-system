@@ -42,32 +42,56 @@ create trigger audit_<table> after insert or update or delete on public.<table>
 | --- | --- | --- |
 | `divisions` | M1 | `id`, `code` (`Kul`…`Wen`), `name` |
 | `funds` | M1 | `id`, `code`, `name` |
-| `settings` | M1 | `key text primary key`, `value jsonb` |
+| `settings` | M1 | `key text primary key`, `value jsonb` – seeded: `ho_check_threshold = 5000000`, `estimation_fee_rate_don = 0.01`, `retention_days_repair = 180`, `retention_days_new = 365` |
 | `profiles` | M1 | `user_id`, `full_name`, `role`, `office`, `division_id`, `active` |
-| `institutes`, `programs`, `district_secretariats`, `schools` | M2 | `id`, `code`/`name`; `schools.division_id` |
+| `sections` | M2 | `id`, `code` (`E` Education, `H` Health, `O` Other Department), `name`. Phase 1 UI shows Education only |
+| `institutes` | M2 | `id`, `code` (initials: `CM`, `PED`, `MOE`, `DoSD`), `name` |
+| `programs`, `district_secretariats`, `schools` | M2 | `id`, `name`; `schools.division_id` |
 | `request_letters` | M2 | `id`, `ref_no`, `letter_date`, `institute_id`, `received_at_ho_on`, `file_path` |
-| `works` | M2 | `id`, `estimate_no` (unique), `estimate_year`, `estimate_serial`, `letter_id`, `institute_id`, `fund_id`, `program_id`, `division_id`, `district_secretariat_id`, `school_id`, `description`, `work_type` (`new`/`repair`), `budget`, `status` (`work_status`), `created_at` |
+| `works` | M2 | `id`, `estimate_no` (unique), `section_id`, `estimate_year`, `estimate_serial`, `division_serial`, `letter_id`, `institute_id`, `fund_id`, `program_id`, `division_id`, `district_secretariat_id`, `school_id`, `description`, `work_type` (`new`/`repair`), `budget`, `status` (`work_status`), `created_at` |
 | `estimates` | M3 | `id`, `work_id`, `version`, `is_current`, `forwarded_to_de_on`, `expected_on`, `total_cost`, `submitted_to_ho_on`, `checked_on`, `check_result`, `sent_to_sender_on` |
 | `design_tasks` | M3 | `work_id`, `discipline`, `submitted_on`, `completed_on` |
 | `work_status_history` | M3 | `work_id`, `from_status`, `to_status`, `changed_by`, `changed_at` |
 
-`work_status` enum is created by **M2** in the `register` migration with values `REG`, `EUP`, `EP`, `CAN`. Only **M3's functions** change `works.status` (M2 revokes direct updates of that column).
+`work_status` enum is created by **M2** in the `register` migration with **all** values in workflow order, so later phases never reorder it: `REG`, `EUP`, `EP`, `TC`, `AW`, `WIP`, `WC`, `FBTP`, `RTR`, `RR`, `RRD`, `TS`, `TER`, `CAN`. Phase 1 uses only `REG`, `EUP`, `EP`, `CAN`. The old sheets' `PC` is the same stage as `TC` (import maps `PC → TC`). Only **M3's functions** change `works.status` (M2 revokes direct updates of that column).
+
+### Status order and stage funnel
+
+Taken from the workbook's count formulas (see [workbook formula analysis](../analysis/workbook-formulas.md)). M3 creates `public.status_rank(work_status) returns int`:
+
+| Status | Rank | Counted as |
+| --- | --- | --- |
+| `REG` | 0 | registered (new – not in the old sheets) |
+| `EUP` | 1 | work |
+| `EP` | 2 | work · estimated |
+| `TC` | 3 | work · estimated · tendered |
+| `AW`, `WIP`, `WC`, `FBTP`, `RTR`, `RR`, `RRD`, `TS`, `TER` | 4–12 | work · estimated · tendered · awarded |
+| `CAN` | – | excluded from every count |
+
+"Completed" is **not** a status rank: it is `physical_progress = 100%` / completion date recorded (Phase 2). Dashboards and summary reports count with `status_rank`, grouped by the division/fund **fields** – never by fixed cell or row positions.
 
 View for the works list (created by **M3**, read by M4):
 
 ```sql
 create view public.works_overview with (security_invoker = true) as
 select w.*, e.total_cost as estimate_total, e.forwarded_to_de_on, e.sent_to_sender_on,
-       e.expected_on, (e.submitted_to_ho_on is not null and e.checked_on is null) as waiting_ho_check
+       e.expected_on, (e.submitted_to_ho_on is not null and e.checked_on is null) as waiting_ho_check,
+       public.status_rank(w.status) as status_rank,
+       case when f.code = 'DON'
+            then round(e.total_cost * public.setting_numeric('estimation_fee_rate_don'), 2) end as cost_for_estimation
 from public.works w
+join public.funds f on f.id = w.fund_id
 left join public.estimates e on e.work_id = w.id and e.is_current;
 ```
+
+`cost_for_estimation` reproduces the workbook's DON rule (Total Estimated Cost × 1%); the rate is a setting because its purpose is still to be confirmed.
 
 ## 3. Postgres functions (RPC)
 
 | Function | Owner | Called by |
 | --- | --- | --- |
-| `next_estimate_serial(p_year int) returns int` | M2 | register form |
+| `suggest_estimate_no(p_section text, p_year int, p_institute text, p_fund text, p_division text) returns text` | M2 | register grid – next serial for section + year, next count in the division, full number |
+| `next_estimate_serial(p_section text, p_year int) returns int` | M2 | used by `suggest_estimate_no` |
 | `find_similar_works(p_school_id uuid, p_description text) returns setof works` | M2 | register form |
 | `forward_to_de(p_work_id uuid, p_forwarded_on date, p_expected_on date)` | M3 | register (after saving) and work page |
 | `submit_estimate(p_work_id uuid, p_total_cost numeric, p_stage_note text, p_file_path text)` | M3 | DE inbox |
@@ -86,7 +110,26 @@ Import from another slice **only** through its `index.ts`.
 | `register` (M2) | `getWorkRegistration(workId)` |
 | `estimates` (M3) | `<StatusBadge status>`, `<EstimateStageTimeline workId>`, `statusLabel(status)` |
 | `works-list` (M4) | `exportWorks(filters)` (server action) |
-| `src/lib/estimate-no` (M2) | `parseEstimateNo()`, `validateEstimateNo()`, `formatEstimateNo()` |
+| `src/lib/estimate-no` (M2) | `parseEstimateNo()`, `validateEstimateNo()`, `formatEstimateNo()`, `instituteInitials()` |
+| `estimates` (M3) | also `statusRank(status)`, `FUNNEL_STAGES` (for Phase 3 dashboards) |
+
+### Estimate No format (same rule as the department's original Google Sheet)
+
+```
+NWPEng/{section}/{year}/{serial}/{institute}/{FUND}/{Div} {division serial}
+NWPEng/E/2026/266/MOE/OTHER/Kul 033
+```
+
+| Part | Rule |
+| --- | --- |
+| section | `E` Education · `H` Health · `O` Other Department |
+| year | from the registration date (the old formula had the year typed in) |
+| serial | running number per section + year, at least 3 digits (`266`, `1072`) |
+| institute | first letter of each word of the institute name (`Chief Ministry` → `CM`, `Department of Sports Development` → `DoSD`) |
+| FUND | fund code in upper case (`PSDG`, `OTHER-D`) |
+| Div + division serial | first 3 letters of the division + running count of works in that division for the section and year, 3 digits (`Kul 033`) |
+
+The clerk may edit a suggested number; the database still checks format, uniqueness (`unique(section_id, estimate_year, estimate_serial)` and `unique(estimate_no)`) and that the parts match the work's fields.
 
 ## 5. Routes and navigation
 
