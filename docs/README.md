@@ -8,12 +8,16 @@ Full specification (workflow, data model, rules, security): [NWP School Works Sy
 
 | Doc | For |
 | --- | --- |
-| [Phase 1 overview](phase-1/00-overview.md) | Everyone – scope, timeline, conventions, who depends on whom |
-| [Member 1 – Database & backend](phase-1/member-1-database-backend.md) | Supabase schema, row-level security, business rules |
-| [Member 2 – Frontend](phase-1/member-2-frontend.md) | Next.js screens, forms, tables, translations |
-| [Member 3 – Reference data & import](phase-1/member-3-data-import.md) | Seed lists, Excel/register import, duplicate checks, exports |
-| [Member 4 – DevOps, QA & security](phase-1/member-4-devops-qa-security.md) | Repo, CI, Vercel/Supabase environments, auth config, testing, department contact |
+| [Phase 1 overview](phase-1/00-overview.md) | Everyone – slices, folder ownership, branches, timeline, definition of done |
+| [Contracts](phase-1/contracts.md) | Everyone – shared tables, functions, routes and APIs between slices |
+| [Member 1 – Auth, access & app shell](phase-1/member-1-auth-access-shell.md) | Sign-in + MFA, roles, RLS helpers, audit log, layout, user admin |
+| [Member 2 – Reference data & register](phase-1/member-2-reference-register.md) | Reference lists, request letters, works, Estimate No |
+| [Member 3 – Estimate workflow](phase-1/member-3-estimate-workflow.md) | Forward to DE, estimates, Rs 5M HO check, work page, inboxes |
+| [Member 4 – Works list, import & DevOps](phase-1/member-4-works-list-import-devops.md) | Works list, Excel export, data import, CI, environments, E2E |
 
-## Setup
+## Other docs
 
 - [Start the Next.js + Supabase project](setup/01-nextjs-supabase-setup.md)
+- [Feature docs](features/README.md) – one per feature, written as each slice is finished
+- [Decisions log](decisions.md) – answers from the department and team decisions
+- Agent instructions: [AGENTS.md](../AGENTS.md) and skills in [.claude/skills](../.claude/skills)

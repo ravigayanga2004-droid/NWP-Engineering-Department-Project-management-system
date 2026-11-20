@@ -1,8 +1,25 @@
 # Start the Next.js + Supabase project
 
-**Who runs this:** Member 4, once, on a branch (`chore/scaffold-nextjs`). Everyone else then pulls and follows [Everyday setup for each member](#everyday-setup-for-each-member).
+> **Status (20 Nov 2026): steps 1–5 are done** on branch `chore/scaffold-nextjs`. New members only need [Everyday setup for each member](#everyday-setup-for-each-member). Steps 6–7 (hosted Supabase and Vercel) are still to do by Member 4. Sections 1–5 stay here as a record of how the project was created.
 
-Tested on 20 Nov 2026 with Node.js 24.15 and npm 11.12; `create-next-app@latest` installed **Next.js 16.4.6, React 19.3, Tailwind CSS 4.3**.
+Created with Node.js 24.15 and npm 11.12: **Next.js 16.4.6, React 19.3, Tailwind CSS 4.3**, shadcn/ui, Supabase CLI 3.2, Vitest 5, Playwright 1.65.
+
+### What is already in the repo
+
+| Item | File(s) |
+| --- | --- |
+| Next.js app (App Router, TypeScript, Tailwind, `src/`) | `src/app/`, `next.config.ts` (security headers added) |
+| shadcn/ui | `components.json`, `src/components/ui/`, `src/lib/utils.ts` |
+| Supabase clients | `src/lib/supabase/server.ts`, `client.ts`, `admin.ts` (secret key, server only) |
+| Session refresh | `src/proxy.ts` |
+| Auth guard for server actions | `src/lib/auth/require-user.ts` (session → MFA aal2 → active profile → role), `src/lib/auth/roles.ts` |
+| Local Supabase config | `supabase/config.toml` – sign-ups off, passwords ≥ 12 with upper/lower/digits, TOTP MFA on |
+| Env template | `.env.example` |
+| Vercel region | `vercel.json` → Mumbai (`bom1`) |
+| Tests | `vitest.config.ts` + `src/lib/auth/roles.test.ts`; `playwright.config.ts` + `e2e/home.spec.ts` |
+| CI/CD | `.github/workflows/pr.yml` → reusable `checks.yml` (lint, typecheck, unit, build, audit, database tests, E2E); `db-deploy.yml` (migrations to dev/staging/production Supabase); `CODEOWNERS`; PR template; Dependabot → `dev` |
+| Agent skills | `.claude/skills/nwp-*`, `AGENTS.md`, `CLAUDE.md` |
+| Branding | `public/branding/placeholders/` (low-res placeholders) |
 
 ## Prerequisites (every member)
 
@@ -17,27 +34,20 @@ Accounts: GitHub (repo access), Supabase and Vercel (Member 4 invites the others
 
 ## 1. Scaffold Next.js into the repo (Member 4, once)
 
-`create-next-app` refuses to run in a folder that contains `README.md` or `branding/`, so move them aside first. (`docs/` is allowed.)
+Two problems had to be worked around: `create-next-app` refuses a folder that contains `README.md` or `branding/`, and npm rejects package names with capital letters (the repo folder has them). So the app was created in a lowercase subfolder and moved up:
 
 ```bash
-cd NWP-Engineering-Department-Project-management-system
-git switch main && git pull
 git switch -c chore/scaffold-nextjs
+mkdir ../_keep && mv README.md branding ../_keep/
 
-mkdir ../_keep
-mv README.md branding ../_keep/
+npx create-next-app@latest nwp-works --ts --eslint --tailwind --app --src-dir --import-alias "@/*" --use-npm --disable-git --yes
 
-npx create-next-app@latest . --ts --eslint --tailwind --app --src-dir --import-alias "@/*" --use-npm --disable-git --yes
-
-mkdir -p public
-mv ../_keep/branding public/branding   # logos become /branding/... URLs
-mv ../_keep/README.md README.md        # keep our README instead of the generated one
-rmdir ../_keep
-
-npm run dev    # open http://localhost:3000 – the Next.js starter page should load
+rm -rf nwp-works/.next nwp-works/README.md
+mv nwp-works/* nwp-works/.gitignore . && rmdir nwp-works      # move the app to the repo root
+mkdir -p public && mv ../_keep/branding public/branding        # logos become /branding/... URLs
+mv ../_keep/README.md README.md && rmdir ../_keep             # keep our README
+# package name set to "nwp-school-works"
 ```
-
-(PowerShell users: use `Move-Item` instead of `mv`, or run these commands in Git Bash.)
 
 ## 2. Add the libraries
 
@@ -49,18 +59,24 @@ npm install @supabase/supabase-js @supabase/ssr server-only zod react-hook-form 
 npx shadcn@latest init
 
 # Dev tools: Supabase CLI, unit tests, end-to-end tests
-npm install -D supabase vitest @playwright/test
-npx playwright install chromium
+# (vitest needs @types/node 22+, so it was raised to ^24 to match Node 24)
+npm install -D @types/node@^24 supabase vitest @playwright/test
+npx playwright install chromium   # each member runs this once before E2E tests
 ```
 
-Add these scripts to `package.json`:
+Scripts in `package.json`:
 
-```json
-"typecheck": "tsc --noEmit",
-"test": "vitest run",
-"test:e2e": "playwright test",
-"db:types": "supabase gen types typescript --local > src/types/database.ts"
-```
+| Script | Does |
+| --- | --- |
+| `npm run dev` | Dev server on http://localhost:3000 |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | `next typegen && tsc --noEmit` (typegen creates route types such as `LayoutProps`) |
+| `npm test` / `npm run test:watch` | Vitest unit tests |
+| `npm run test:e2e` | Playwright end-to-end tests |
+| `npm run db:start` / `npm run db:reset` | Start local Supabase / rebuild it from migrations + seed |
+| `npm run db:types` | Regenerate `src/types/database.ts` from the local database |
+
+Known audit note: `exceljs` depends on an old `uuid` with a **moderate** advisory (only affects a code path exceljs does not use). CI fails only on high/critical; recheck when exceljs updates.
 
 ## 3. Local Supabase
 
@@ -219,7 +235,8 @@ Open a PR, get one review, merge. The team starts work from the merged `main`.
 git clone https://github.com/ravigayanga2004-droid/NWP-Engineering-Department-Project-management-system.git
 cd NWP-Engineering-Department-Project-management-system
 npm install
-npx supabase start          # Docker must be running
+npx playwright install chromium   # once, for E2E tests
+npx supabase start          # Docker Desktop must be running
 npx supabase db reset       # build the local DB from migrations + seed
 cp .env.example .env.local  # then paste the keys from `npx supabase status`
 npm run dev

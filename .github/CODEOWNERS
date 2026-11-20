@@ -1,0 +1,69 @@
+# Folder ownership for Phase 1 (see docs/phase-1/00-overview.md).
+# Replace @member1-github … @member4-github with real GitHub usernames.
+# Later rules win, so the general rules come first.
+
+# Default: Member 4 (project setup) reviews anything not listed below
+*                                           @member4-github
+
+# Docs: anyone may edit; overview and contracts need the whole team
+/docs/                                      @member1-github @member2-github @member3-github @member4-github
+/docs/phase-1/00-overview.md                @member1-github @member2-github @member3-github @member4-github
+/docs/phase-1/contracts.md                  @member1-github @member2-github @member3-github @member4-github
+
+# Member 1 – auth, access, app shell
+/src/app/(auth)/                            @member1-github
+/src/app/(app)/layout.tsx                   @member1-github
+/src/app/(app)/admin/users/                 @member1-github
+/src/features/auth/                         @member1-github
+/src/features/admin-users/                  @member1-github
+/src/lib/auth/                              @member1-github
+/src/lib/supabase/                          @member1-github
+/src/components/shell/                      @member1-github
+/src/components/ui/                         @member1-github
+/src/i18n/                                  @member1-github
+/src/proxy.ts                               @member1-github
+/supabase/migrations/*_auth_*               @member1-github
+/supabase/tests/auth_*                      @member1-github
+
+# Member 2 – reference data & register
+/src/app/(app)/admin/reference/             @member2-github
+/src/app/(app)/letters/                     @member2-github
+/src/features/reference/                    @member2-github
+/src/features/register/                     @member2-github
+/src/lib/estimate-no/                       @member2-github
+/supabase/migrations/*_ref_*                @member2-github
+/supabase/migrations/*_register_*           @member2-github
+/supabase/tests/ref_*                       @member2-github
+/supabase/tests/register_*                  @member2-github
+
+# Member 3 – estimate workflow
+# works/[id]/ – the whole works/ folder; Member 4's works/page.tsx rule below overrides for the list page
+/src/app/(app)/works/                       @member3-github
+/src/app/(app)/inbox/                       @member3-github
+/src/features/estimates/                    @member3-github
+/supabase/migrations/*_estimate_*           @member3-github
+/supabase/tests/estimate_*                  @member3-github
+
+# Member 4 – works list, import, DevOps
+/src/app/(app)/works/page.tsx               @member4-github
+/src/features/works-list/                   @member4-github
+/scripts/                                   @member4-github
+/e2e/                                       @member4-github
+/.github/                                   @member4-github
+/package.json                               @member4-github
+/package-lock.json                          @member4-github
+/supabase/config.toml                       @member4-github
+
+# Translations: each feature's owner
+/messages/*/common.json                     @member1-github
+/messages/*/auth.json                       @member1-github
+/messages/*/shell.json                      @member1-github
+/messages/*/admin-users.json                @member1-github
+/messages/*/reference.json                  @member2-github
+/messages/*/register.json                   @member2-github
+/messages/*/estimates.json                  @member3-github
+/messages/*/works-list.json                 @member4-github
+
+# Agent skills and instructions: whole team
+/.claude/                                   @member1-github @member2-github @member3-github @member4-github
+/AGENTS.md                                  @member1-github @member2-github @member3-github @member4-github
