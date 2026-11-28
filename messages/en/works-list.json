@@ -1,0 +1,50 @@
+{
+  "title": "Works",
+  "subtitle": "All school works you can see. Click an Estimate No to open the work.",
+  "export": "Export to Excel",
+  "exportSoon": "Excel export is added in week 4",
+  "loading": "Loading works…",
+  "stages": {
+    "all": "All",
+    "reg": "Registered",
+    "de": "With DE",
+    "ho": "HO check",
+    "sent": "Sent",
+    "can": "Cancelled"
+  },
+  "badges": {
+    "reg": "Registered",
+    "de": "With DE · EUP",
+    "ho": "Awaiting HO check",
+    "sent": "Sent · EP",
+    "can": "Cancelled"
+  },
+  "filters": {
+    "search": "Search",
+    "searchPlaceholder": "Estimate No, school or work… (press Enter)",
+    "year": "Year",
+    "allYears": "All years",
+    "fund": "Fund",
+    "allFunds": "All funds",
+    "division": "Division",
+    "allDivisions": "All divisions",
+    "type": "New / Repair",
+    "allTypes": "All",
+    "new": "New",
+    "repair": "Repair"
+  },
+  "columns": {
+    "estimateNo": "Estimate No",
+    "school": "School",
+    "work": "Work",
+    "division": "Division",
+    "fund": "Fund",
+    "budget": "Budget (Rs)",
+    "estimate": "Estimate (Rs)",
+    "status": "Status"
+  },
+  "empty": "No works match these filters.",
+  "showing": "Showing {from}–{to} of {total} works",
+  "previous": "Previous",
+  "next": "Next"
+}
